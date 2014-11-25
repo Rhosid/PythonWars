@@ -30,3 +30,5 @@ print("acronymGenerator.py")
 string = input("Please Enter String: ")
 acro = acroGen(string)
 print("Acronym: "+acro)
+
+pause = input("paused...")
