@@ -1,11 +1,8 @@
 """
 Name: acronymGenerator.py
-Description: creates acronyms out of a string of words
-Version: 1.0.0
+Stuffs: by Spencer and Nick!
+Date: 10/29/14
 """
-
-__author__ = "Spencer Dockham"
-__date__ = "10/29/2014"
 
 # DEF
 
@@ -30,5 +27,3 @@ print("acronymGenerator.py")
 string = input("Please Enter String: ")
 acro = acroGen(string)
 print("Acronym: "+acro)
-
-pause = input("paused...")
