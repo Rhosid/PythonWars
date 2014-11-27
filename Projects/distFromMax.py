@@ -1,7 +1,7 @@
 """
 Name: distFromMax.py
 Description: finds the distance from max
-Version: 1
+Version: 1.0.0
 """
 
 __author__ = "Spencer Dockham"
@@ -25,5 +25,7 @@ returnList = distFromMax(numList)
 for ct in range(0,len(returnList)):
     print("Distance from "+str(numList[ct])+" to "+str(max(numList))+": "+str(returnList[ct]))
 
-# pause program
-pause = input("Press any button to Exit...")
+# program concluded
+print("Done")
+# pause keeps the command window open
+pause = input("Press any key to end: ")
