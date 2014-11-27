@@ -1,8 +1,12 @@
 """
-Name: 5sumDigits.py
-Stuffs: by Spencer and Nick!
-Date: 10/29/14
+Name: sumDigits.py
+Description: sum up digits from string
+Version: 1.0.0
+Python: 3.3.5
 """
+
+__author__ = "Spencer Dockham"
+__date__ = "10/29/2014"
 
 # DEF
 def checkString(string):
@@ -32,3 +36,8 @@ while checkString(string) == False:
     string = input("Please Enter a numbers: ")
 total = addN(string)
 print("Total of string: "+str(total))
+
+# program concluded
+print("Done")
+# pause keeps the command window open
+pause = input("Press any key to end: ")
