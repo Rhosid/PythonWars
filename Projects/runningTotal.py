@@ -23,3 +23,7 @@ newNumber = sumN(int(number))
 # printer
 print("Running Total: "+str(newNumber))
     
+# program concluded
+print("Done")
+# pause keeps the command window open
+pause = input("Press any key to end: ")
