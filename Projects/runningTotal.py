@@ -1,8 +1,12 @@
 """
 Name: runningTotal.py
-Stuffs: by Spencer and Nick!
-Date: 10/29/14
+Description: holds running total of string of numbers
+Version: 1.0.0
+Python: 3.3.5
 """
+
+__author__ = "Spencer Dockham"
+__date__ = "10/29/2014"
 # DEF
 
 def sumN(tmp):
