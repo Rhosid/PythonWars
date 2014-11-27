@@ -1,8 +1,12 @@
 """
-Name: 6reversalInteger.py
-Stuffs: by Spencer and Nick!
-Date: 10/29/14
+Name: reversalInteger.py
+Description: reverse all integers in string
+Version: 1.0.2
+Python: 3.3.5
 """
+
+__author__ = "Spencer Dockham"
+__date__ = "10/29/2014"
 
 # DEF
 def checkString(string):
@@ -34,3 +38,8 @@ while checkString(num) == False:
     num = input("Please enter a digit greater than 9: ")
 revNum = revNumbers(num)
 print("Your number reversed: "+str(revNum))
+
+# program concluded
+print("Done")
+# pause keeps the command window open
+pause = input("Press any key to end: ")
