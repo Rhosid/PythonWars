@@ -1,10 +1,13 @@
 """
 Name: runningCubedTotal.py
-Stuffs: by Spencer and Nick!
-Date: 10/29/14
-
-NOTE: returns cubed. Not the running total.. not sure how to do that.
+Description: prints the running total of the cubed numbers
+Version: 1.0.0
+Python: 3.3.5
 """
+
+__author__ = "Spencer Dockham"
+__date__ = "10/29/2014"
+
 # DEF
 
 def sumN(tmp):
@@ -21,4 +24,7 @@ number = input("Enter a number: ")
 newNum = sumN(number)
 print("Number Cubed: "+str(newNum))
 
-
+# program concluded
+print("Done")
+# pause keeps the command window open
+pause = input("Press any key to end: ")
