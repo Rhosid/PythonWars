@@ -1,8 +1,12 @@
 """
 Name: palindrome.py
-Stuffs: by Spencer!
-Date: 10/29/14
+Description: askes for a string and checks if palindrome, returns T/F
+Version: 1.0.2
+Python: 3.3.5
 """
+
+__author__ = "Spencer Dockham"
+__date__ = "10/29/2014"
 
 
 # DEF
@@ -36,5 +40,7 @@ if isPalindrome(num):
 else:
     print("You did not enter a palindrome.")
 
+# program concluded
+print("Done")
 # pause keeps the command window open
 pause = input("Press any key to end: ")
