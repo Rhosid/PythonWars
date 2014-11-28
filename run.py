@@ -70,18 +70,32 @@ print("current path: "+str(path))
 # if file found, continue
 if checkPath(path):
     print("Path found...")
+    running = True
+    while running:
+        
+        # display menu
+        #--------------------------------------------------
+        # fileCt equals number of files in \Projects\*.py
+        fileCt = fileCount(path)
+        # library holds tuples of file name and path
+        library = regFiles(path,fileCt)
+        # assign path returned from printMenu to int(address)
+        address = printMenu(library)
+        print("opening program...")
+        os.system("start "+str(address))
+        #--------------------------------------------------
 
-    # display menu
-    #--------------------------------------------------
-    # fileCt equals number of files in \Projects\*.py
-    fileCt = fileCount(path)
-    # library holds tuples of file name and path
-    library = regFiles(path,fileCt)
-    # assign path returned from printMenu to int(address)
-    address = printMenu(library)
-    print("opening program...")
-    os.system("start "+str(address))
-    #--------------------------------------------------
+        tmpList = ['y','n']
+        tmp = input("Contiue? [y/n]: ")
+        while tmp.lower() not in tmpList:
+            print("ERROR: Couldn't read choice...")
+            tmp = input("Contiue? [y/n]: ")
+        else:
+            if tmp.lower() == 'y':
+                print("")
+            else:
+                running = False
+                break
 
 # if file is not found, end program    
 else:
@@ -89,5 +103,3 @@ else:
     
 # program concluded
 print("Done")
-# pause keeps the command window open
-pause = input("Press any key to end: ")
