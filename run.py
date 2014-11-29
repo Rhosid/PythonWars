@@ -60,7 +60,10 @@ import os
 # MAIN
 
 # standard path for pythonWars run program
-path = "C:\\PythonWars\\Projects"
+#path = "C:\\PythonWars\\Projects"
+path = os.path.dirname(os.path.realpath(__file__))
+path += "\\Projects"
+print(path)
 
 # inform user that programs are being looked for
 print("Searching for programs...")
