@@ -1,7 +1,7 @@
 """
 Name: run.py
 Description: menu holding all programs in Programs folder
-Version: 1.0.2
+Version: 1.0.3
 Python: 3.3.5
 """
 
@@ -60,10 +60,15 @@ import os
 # MAIN
 
 # standard path for pythonWars run program
+<<<<<<< HEAD
 #path = "C:\\PythonWars\\Projects"
 path = os.path.dirname(os.path.realpath(__file__))
 path += "\\Projects"
 print(path)
+=======
+path = os.path.dirname(os.path.realpath(__file__))
+path += "\\Projects"
+>>>>>>> origin/master
 
 # inform user that programs are being looked for
 print("Searching for programs...")
