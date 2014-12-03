@@ -42,11 +42,11 @@ def regFiles(path,fileCt):
 def printMenu(lib):
     numbet = []
     for ct in range(0,len(lib)):
-        numbet.append(int(ct+1))
+        numbet.append(str(int(ct+1)))
         data = lib[ct]
         print(str(ct+1)+". "+data[0])
     choice = input("Please enter a choice: ")
-    while int(choice) not in numbet:
+    while choice not in numbet:
         print("Choice not valid. Please enter a number.")
         choice = input("Please enter a choice: ")
     else:
@@ -93,7 +93,8 @@ if checkPath(path):
             tmp = input("Contiue? [y/n]: ")
         else:
             if tmp.lower() == 'y':
-                print("")
+                print("");print("-"*36)
+                print("MENU");print(path);print("")
             else:
                 running = False
                 break
