@@ -1,19 +1,29 @@
 """
 Name: hangman.py
 Description: game of hangman
-Version: 1.0.2
+Version: 1.0.3
 """
 
 __author__ = "Spencer Dockham"
-__date__ = "12/4/2014"
+__date__ = "12/5/2014"
 
 # IMPORT
 import random
 
 # DEF
-def getSecret():
+def getSecret(num):
     # pre: none
-    words = ['fish','banana','poster','hampster','house','python','bonus','water','yellow','star']
+    words = ['python','bonus']
+    animals = ['alpaca','beaver','cheetah','duck','owl']
+    foods = ['apple','banana','pepper','cucumber','bacon','corn']
+    colors = ['green','aero','amber','black','orange','yellow','magenta']
+    if num == 0:
+        words = animals
+    elif num == 1:
+        words = foods
+    elif num == 2:
+        words = colors
+    
     random.shuffle(words)
     return words[0]
 
@@ -67,6 +77,16 @@ def debugRequest():
             print('debug mode turned on...')
             return True
     return False
+
+def getCategory(num):
+    if num == 0:
+        return 'animals'
+    elif num == 1:
+        return 'foods'
+    elif num == 2:
+        return 'colors'
+    else:
+        return 'unknown'
     
 # LIST
 alphabet=['a','b','c','d','e','f','g','h','i','j',
@@ -81,8 +101,9 @@ trueList = [] # list with true letters in
 guessList = []
 turns = 10 # number of turns to guess word
 win = False; running = True
-secret = getSecret() # assign secret the secret word
-
+num = random.randrange(0,3)
+secret = getSecret(num) # assign secret the secret word
+category = getCategory(num)
 # while player wants to play
 while running == True:
     falseList = [] # list with false letters in
@@ -90,7 +111,9 @@ while running == True:
     guessList = []
     turns = 10 # number of turns to guess word
     win = False; running = True
-    secret = getSecret() # assign secret the secret word
+    num = random.randrange(0,3)
+    secret = getSecret(num) # assign secret the secret word
+    category = getCategory(num)
     # while they haven't won
     while win == False:
         # while they haven't lost
@@ -98,9 +121,9 @@ while running == True:
             print('\n'*50)
             print("HangMan\n")
             print("=+="*15)
-            print("Round: "+str(turns))
+            print("Round: "+str(turns));print('')
             displayWrong(falseList)
-            print("-"*45);print('')
+            print("-"*45);print("Category: "+str(category));print('')
             print("Word: "+str(printWord(trueList,secret)))
             if DEBUG_MODE: # if debug is on display secret word
                 print("DEBUG: Word: "+str(secret))
@@ -151,6 +174,3 @@ while running == True:
             running = False
             break
 print('Done.')
-
-
-        
