@@ -14,15 +14,18 @@ import random
 def getSecret(num):
     # pre: none
     words = ['python','bonus']
-    animals = ['alpaca','beaver','cheetah','duck','owl']
-    foods = ['apple','banana','pepper','cucumber','bacon','corn']
-    colors = ['green','aero','amber','black','orange','yellow','magenta']
+    animals = ['alpaca','beaver','cheetah','duck','owl','cat','llama','bison','lizard','eagle','wolf','cobra','raven','fox','goose']
+    foods = ['apple','banana','pepper','cucumber','bacon','corn','pineapple','cheese','salad','chicken','clam','pizza','burrito']
+    colors = ['green','aero','amber','black','orange','yellow','magenta','blue','lime']
+    country = ['canada','brazil','chile','india','china','russia','greenland','mexico']
     if num == 0:
         words = animals
     elif num == 1:
         words = foods
     elif num == 2:
         words = colors
+    elif num == 3:
+        words = country
     
     random.shuffle(words)
     return words[0]
@@ -85,6 +88,8 @@ def getCategory(num):
         return 'foods'
     elif num == 2:
         return 'colors'
+    elif num == 3:
+        return 'country'
     else:
         return 'unknown'
     
@@ -111,7 +116,7 @@ while running == True:
     guessList = []
     turns = 10 # number of turns to guess word
     win = False; running = True
-    num = random.randrange(0,3)
+    num = random.randrange(0,4)
     secret = getSecret(num) # assign secret the secret word
     category = getCategory(num)
     # while they haven't won
