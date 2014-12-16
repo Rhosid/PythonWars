@@ -5,7 +5,7 @@ Description: Game of Selling Lemonade
 
 __author__ = "Spencer Dockham"
 __date__ = "12/14/2014"
-__version__ = '1.0.5'
+__version__ = '1.0.8'
 
 import time
 import random
@@ -20,7 +20,7 @@ def is_number(s):
     except ValueError:
         return False
 
-def clockData(pace,day,m,hour,minute):
+def clockData(day,m,hour,minute):
     if minute > 5:
         minute = 0
         hour += 1
@@ -85,6 +85,48 @@ def checkPrice(num,recom):
             return True
     return False
 
+def getWeather():
+    weather = ''
+    wList = ['clear','clear','clear','clear','clear','clear','clear','clear','clear',
+             'partly cloudy','partly cloudy','partly cloudy',
+             'rainy','rainy','rainy'
+             'foggy','foggy',
+             'thunderstorms',
+             'windy',
+             'hailing']
+    num = random.randint(0,len(wList))
+    string = str(wList[num])
+    return string
+
+def testWeather(weather):
+    if weather == 'clear':
+        return True
+    elif weather == 'partly cloudy':
+        num=random.randint(0,10)
+        if num >= 2:
+            return True
+    elif weather == 'rainy':
+        num=random.randint(0,9)
+        if num >= 5:
+            return True
+    elif weather == 'foggy':
+        num=random.randint(0,5)
+        if num >= 4:
+            return True
+    elif weather == 'thunderstorms':
+        num=random.randint(0,15)
+        if num == 0:
+            return True
+    elif weather == 'windy':
+        num=random.randint(0,7)
+        if num >= 5:
+            return True
+    elif weather == 'hailing':
+        num=random.randint(0,50)
+        if num == 0:
+            return True
+    return False
+
 def saveGame():
     dataList = []
     dataList.append(money)
@@ -105,6 +147,8 @@ def saveGame():
     dataList.append(hour)
     dataList.append(minute)
     dataList.append(recomSellPrice)
+    dataList.append(gameSpeed)
+    dataList.append(weather)
     tmpStr = ''
     for ct in range(0,len(dataList)):
         tmpStr+=str(dataList[ct])+','
@@ -120,12 +164,9 @@ def saveGame():
         print("Game Saved...")
 
 # LOAD DATA
-money = 250;price = 0.5;lemon = 100;sugar = 100;cups = 50;ice = 400;shopRep = 0.1
-custRep = 0.0;custLimit = 10;shopIndex = 0;upgradeIndex = 0;openHour = 10;closeHour = 4
-day = 1;m = 'am';hour = openHour;minute = 0;gameTime = '';clockList = [];pace = 1
-
+print("LEMONADE STAND GAME");time.sleep(1)
 if not os.path.exists('data\dataV'+__version__+'.txt'):
-    print("No Save Data Found...")
+    print("No Save Data Found...");time.sleep(1)
     money = 250
     price = 0.5
     lemon = 100
@@ -145,13 +186,14 @@ if not os.path.exists('data\dataV'+__version__+'.txt'):
     minute = 0
     gameTime = ''
     clockList = []
-    pace = 1
     recomSellPrice = 0.5
+    gameSpeed = float(1)
+    weather = 'clear'
     curAds=[]
     saveGame()
-    print("NEW GAME CREATED...")
+    print("NEW GAME CREATED...");time.sleep(gameSpeed)
 else:
-    print("Loading save data...")
+    print("Loading save data...");time.sleep(1)
     with open('data\dataV'+__version__+'.txt','r') as file:
         data = file.read()
         lineList=data.split(',')
@@ -176,17 +218,18 @@ else:
         hour = int(dataList[15])
         minute = int(dataList[16])
         recomSellPrice = float(dataList[17])
+        gameSpeed = float(dataList[18])
+        weather = str(dataList[19])
         curAds=[]
         # loading ads
-        tmpIndex = (len(dataList)-18)
+        tmpIndex = (len(dataList)-20)
         steps = (tmpIndex/4);tmpAd=[]
         for ct in range(0,int(steps)):
             tmpAd=[dataList[17+(ct*4)],dataList[17+(ct*4)+1],dataList[17+(ct*4)+2],dataList[17+(ct*4)+3]]
             curAds.append(tmpAd)
         clockList = []
-        clockList = clockData(pace,day,m,hour,minute)
+        clockList = clockData(day,m,hour,minute)
         gameTime = clockList[4]
-        pace = 1
                
 # vars
 shopCost = [250,500,1000,1500,2500]
@@ -194,9 +237,7 @@ upgradeCost = [25,50,100,250,500]
 lemonPrice = 0.5
 sugarPrice=0.05
 cupPrice=0.1
-icePrice=0.2
-
-recomSellPrice = 0.5
+icePrice=0.02
 
 delay = 0.2
 
@@ -208,21 +249,21 @@ run = True
 while run:
     
     # get time
-    clockList = clockData(pace,day,m,hour,minute)
+    clockList = clockData(day,m,hour,minute)
     day = clockList[0]
     m = clockList[1]
     hour = clockList[2]
     minute = clockList[3]
     gameTime = clockList[4]
-    print(gameTime)
+    print(gameTime);time.sleep(gameSpeed)
     time.sleep(0.1)
 
     # request info
-    print("Lets setup shop.")
-    print("Money: $%.2f"%float(money))
-    print("Weather: Clear");print('');print('-'*30);print('')
+    print("Lets setup shop.");time.sleep(gameSpeed)
     menu = True
     while menu:
+        print("\nMoney: $%.2f"%float(money))
+        print("Weather: "+weather);print('');print('-'*30);print('');time.sleep(gameSpeed)
         print("1. Buy Inventory")
         print("2. Advertise")
         print("3. Upgrade Shop")
@@ -233,17 +274,17 @@ while run:
         print("8. Save Game")
         print("9. Quit")
         menuList = ['1','2','3','4','5','6','7','8','9']
-        option = input("Select Option: ")
+        option = input("Select Option: ");time.sleep(gameSpeed)
         while option not in menuList:
             print("ERROR: option must be a number...")
-            option = input("Select Option: ")
+            option = input("Select Option: ");time.sleep(gameSpeed)
         if option == '1':
-            print("Buying inventory...")
+            print("Buying inventory...");time.sleep(gameSpeed)
             print('-'*30);print('Inventory');print('-'*30);print('')
             print('Lemons: '+str(lemon))
             print('Sugar: '+str(sugar)+' oz')
             print('Ice: '+str(ice)+' cubes')
-            print('Cups: '+str(cups));print('')
+            print('Cups: '+str(cups));print('');time.sleep(gameSpeed)
             subMenu = True
             while subMenu:
                 print("Money: $%.2f"%float(money))
@@ -253,20 +294,20 @@ while run:
                 print("4. Buy Cups $%.2f"%float(cupPrice))
                 print("5. Back")
                 menuList = ['1','2','3','4','5']
-                option = input("Select Option: ")
+                option = input("Select Option: ");time.sleep(gameSpeed)
                 while option not in menuList:
                     print("ERROR: option must be a number...")
-                    option = input("Select Option: ")
+                    option = input("Select Option: ");time.sleep(gameSpeed)
                 if option == '1':
                     print('');print('-'*30);print('')
-                    print("Buying Lemons...")
-                    amount = input("Amount: ")
+                    print("Buying Lemons...");time.sleep(gameSpeed)
+                    amount = input("Amount: ");time.sleep(gameSpeed)
                     while is_number(amount) == False:
                         print("ERROR: option must be a number...")
-                        amount = input("Amount: ")
+                        amount = input("Amount: ");time.sleep(gameSpeed)
                     else:
                         while priceCheck(amount,lemonPrice,money) == False:
-                            print("You can't afford that...")
+                            print("You can't afford that...");time.sleep(gameSpeed)
                             break
                         else:
                             cost = lemonPrice * int(amount)  
@@ -274,18 +315,18 @@ while run:
                             lemon += int(amount);print('')
                             print("Cost: $%.2f"%float(cost))
                             print("Money: $%.2f"%float(money))
-                            print("Lemons: "+str(lemon));print('')
+                            print("Lemons: "+str(lemon));print('');time.sleep(gameSpeed)
                     break
                 elif option == '2':
                     print('');print('-'*30);print('')
-                    print("Buying Sugar...")
-                    amount = input("Amount: ")
+                    print("Buying Sugar...");time.sleep(gameSpeed)
+                    amount = input("Amount: ");time.sleep(gameSpeed)
                     while is_number(amount) == False:
                         print("ERROR: option must be a number...")
-                        amount = input("Amount: ")
+                        amount = input("Amount: ");time.sleep(gameSpeed)
                     else:
                         while priceCheck(amount,sugarPrice,money) == False:
-                            print("You can't afford that...")
+                            print("You can't afford that...");time.sleep(gameSpeed)
                             break
                         else:
                             cost = sugarPrice * int(amount)
@@ -293,18 +334,18 @@ while run:
                             sugar += int(amount);print('')
                             print("Cost: $%.2f"%float(cost))
                             print("Money: $%.2f"%float(money))
-                            print("Sugar: "+str(sugar));print('')
+                            print("Sugar: "+str(sugar));print('');time.sleep(gameSpeed)
                     break
                 elif option == '3':
                     print('');print('-'*30);print('')
-                    print("Buying Ice...")
-                    amount = input("Amount: ")
+                    print("Buying Ice...");time.sleep(gameSpeed)
+                    amount = input("Amount: ");time.sleep(gameSpeed)
                     while is_number(amount) == False:
                         print("ERROR: option must be a number...")
-                        amount = input("Amount: ")
+                        amount = input("Amount: ");time.sleep(gameSpeed)
                     else:
                         while priceCheck(amount,icePrice,money) == False:
-                            print("You can't afford that...")
+                            print("You can't afford that...");time.sleep(gameSpeed)
                             break
                         else:
                             cost = icePrice * int(amount)
@@ -312,18 +353,18 @@ while run:
                             ice += int(amount);print('')
                             print("Cost: $%.2f"%float(cost))
                             print("Money: $%.2f"%float(money))
-                            print("Ice: "+str(ice));print('')
+                            print("Ice: "+str(ice));print('');time.sleep(gameSpeed)
                     break
                 elif option == '4':
                     print('');print('-'*30);print('')
-                    print("Buying Cups...")
-                    amount = input("Amount: ")
+                    print("Buying Cups...");time.sleep(gameSpeed)
+                    amount = input("Amount: ");time.sleep(gameSpeed)
                     while is_number(amount) == False:
                         print("ERROR: option must be a number...")
-                        amount = input("Amount: ")
+                        amount = input("Amount: ");time.sleep(gameSpeed)
                     else:
                         while priceCheck(amount,cupPrice,money) == False:
-                            print("You can't afford that...")
+                            print("You can't afford that...");time.sleep(gameSpeed)
                             break
                         else:
                             cost = cupPrice * int(amount)
@@ -331,18 +372,19 @@ while run:
                             cups += int(amount);print('')
                             print("Cost: $%.2f"%float(cost))
                             print("Money: $%.2f"%float(money))
-                            print("Cups: "+str(cups));print('')
+                            print("Cups: "+str(cups));print('');time.sleep(gameSpeed)
                     break
                 elif option == '5':
                     print('')
                     break
         elif option == '2':
-            print("\n\nLooking up advertising...")
+            print("\n\nLooking up advertising...");time.sleep(gameSpeed)
             print('-'*30);print('Advertising');print('-'*30);print('')
             print("Current  Ads:")
             for ct in range(0,len(curAds)):
                 tmpList = curAds[ct]
                 print("  > "+str(tmpList[0])+"  - Days Left: "+str(tmpList[2]))
+            time.sleep(gameSpeed)
             print("\nMoney: $%.2f"%float(money))
             print("Ad Campaign's Available:");adTmpList = []
             for ct in range(0,len(adList)):
@@ -354,44 +396,44 @@ while run:
                 choiceList.append(str(ct+1))
             choiceList.append(str(len(adTmpList)+1))
             print("  4. Back")
-            print('');option = input("Select Option: ")
+            print('');option = input("Select Option: ");time.sleep(gameSpeed)
             while option not in choiceList:
                 print("ERROR: option must be a number...")
-                option = input("Select Option: ")
+                option = input("Select Option: ");time.sleep(gameSpeed)
             if option == '1':
                 tmpList = adList[0]; cost = tmpList[1]
-                print('Price: $'+str(cost)+'\n')
+                print('Price: $'+str(cost)+'\n');time.sleep(gameSpeed)
                 if (money - int(cost)) < 0:
                     print('You cannot afford this campaign...\n')
-                    print('');print('');print('-'*30);print('')
+                    print('');print('');print('-'*30);print('');time.sleep(gameSpeed)
                     break
                 else:
                     money = float(float(money) - float(cost))
                     curAds.append(adList[0])
                     print('Megazine campaign started for 7 days')
-                    print('Cost: $%.2f'%float(cost)+'\n')
+                    print('Cost: $%.2f'%float(cost)+'\n');time.sleep(gameSpeed)
             elif option == '2':
                 tmpList = adList[1]; cost = tmpList[1]
-                print('Price: $'+str(cost)+'\n')
+                print('Price: $'+str(cost)+'\n');time.sleep(gameSpeed)
                 if (money - int(cost)) < 0:
                     print('You cannot afford this campaign...\n')
-                    print('');print('');print('-'*30);print('')
+                    print('');print('');print('-'*30);print('');time.sleep(gameSpeed)
                     break
                 else:
                     money = float(float(money) - float(cost))
                     curAds.append(adList[1])
-                    print('TV campaign started for 4 days\n')
+                    print('TV campaign started for 4 days\n');time.sleep(gameSpeed)
             elif option == '3':
                 tmpList = adList[2]; cost = tmpList[1]
-                print('Price: $'+str(cost)+'\n')
+                print('Price: $'+str(cost)+'\n');time.sleep(gameSpeed)
                 if (money - int(cost)) < 0:
                     print('You cannot afford this campaign...\n')
-                    print('');print('');print('-'*30);print('')
+                    print('');print('');print('-'*30);print('');time.sleep(gameSpeed)
                     break
                 else:
-                    money = float(float(money) - float(cost))
+                    money = float(float(money) - float(cost));time.sleep(gameSpeed)
                     curAds.append(adList[2])
-                    print('Radio campaign started for 7 days\n')
+                    print('Radio campaign started for 7 days\n');time.sleep(gameSpeed)
             elif option == '4':
                 print('')
                 break
@@ -401,27 +443,27 @@ while run:
             print("2. Buy New Stand")
             print("3. Back")
             menuList = ['1','2','3']
-            option = input("Select Option: ")
+            option = input("Select Option: ");time.sleep(gameSpeed)
             while option not in menuList:
                 print("ERROR: option must be a number...")
-                option = input("Select Option: ")
+                option = input("Select Option: ");time.sleep(gameSpeed)
             print('')
             if option == '1':
                 if upgradeIndex == len(upgradeCost):
                     print("You have already upgraded this shop to it's limit.")
-                    print("Consider upgrading to a new shop.")
+                    print("Consider upgrading to a new shop.");time.sleep(gameSpeed)
                 else:
                     cost = upgradeCost[upgradeIndex]
                     print("Money: $%.2f"%float(money))
                     print("Upgrad Current Stand: $%.2f"%float(cost))
                     choiceList=['y','n']
-                    choice = input("Would you like to upgrade? [y/n]: ")
+                    choice = input("Would you like to upgrade? [y/n]: ");time.sleep(gameSpeed)
                     while choice not in choiceList:
                         print("ERROR: option must be 'y' or 'n'")
-                        choice = input("Would you like to upgrade shop? [y/n]: ")
+                        choice = input("Would you like to upgrade shop? [y/n]: ");time.sleep(gameSpeed)
                     if choice == 'y':
                         if (money - cost) < 0:
-                            print("You cannot afford this upgrade\n")
+                            print("You cannot afford this upgrade\n");time.sleep(gameSpeed)
                             print('-'*30+'\n')
                         else:
                             money -= cost
@@ -433,7 +475,7 @@ while run:
                             print("\nCost: $%.2f"%float(cost))
                             print("Money: $%.2f"%float(money))
                             print("Increased shop popularity\n")
-                            print('-'*30+'\n')
+                            print('-'*30+'\n');time.sleep(gameSpeed)
                     else:
                         continue
             elif option == '2':
@@ -441,14 +483,14 @@ while run:
                 print("Money: $%.2f"%float(money))
                 print("New Stand Upgrade: $%.2f"%float(cost))
                 choiceList=['y','n']
-                choice = input("Would you like to upgrade? [y/n]: ")
+                choice = input("Would you like to upgrade? [y/n]: ");time.sleep(gameSpeed)
                 while choice not in choiceList:
                     print("ERROR: option must be 'y' or 'n'")
-                    choice = input("Would you like to upgrade? [y/n]: ")
+                    choice = input("Would you like to upgrade? [y/n]: ");time.sleep(gameSpeed)
                 if choice == 'y':
                     if (money - cost) < 0:
                         print("You cannot afford this upgrade\n")
-                        print('-'*30+'\n')
+                        print('-'*30+'\n');time.sleep(gameSpeed)
                     else:
                         money -= cost
                         upgradeIndex = 0
@@ -460,14 +502,14 @@ while run:
                         print("\nCost: $%.2f"%float(cost))
                         print("Money: $%.2f"%float(money))
                         print("New Customer Limit: "+str(custLimit)+'\n')
-                        print('-'*30+'\n')
+                        print('-'*30+'\n');time.sleep(gameSpeed)
                 else:
                     continue
             elif option == '3':
-                print('\n')
+                print('\n');time.sleep(gameSpeed)
             
         elif option == '4':
-            print("Opening shop for the day...\n")
+            print("Opening shop for the day...\n");time.sleep(gameSpeed)
             if testInventory(lemon-0.2,sugar-1,cups-1,ice-1):
                 # Starting Day Clock
                 hour = openHour;minute=0;Open = True; m = 'am'
@@ -475,7 +517,7 @@ while run:
                     Open == False
                 else:
                     Open == True
-                clockList = clockData(pace,day,m,hour,minute)
+                clockList = clockData(day,m,hour,minute)
                 day = clockList[0]
                 m = clockList[1]
                 hour = clockList[2]
@@ -499,96 +541,108 @@ while run:
                     custs = round(custs)
                     if custs > custLimit:
                         custs = custLimit
-                    print("Customers: "+str(custs))
+                    #print("Customers: "+str(custs));time.sleep(gameSpeed)
                     choiceList = [0,1,2]
                     closed = False
                     for ct in range(0,custs):
                         if closed == False:
                             choice = random.choice(choiceList)
+                            custDetur = 0
                             if choice == 0:
-                                if testInventory(lemon-0.2,sugar-1,cups-1,ice-1):
-                                    if checkPrice(price,recomSellPrice):
-                                        money += price
-                                        lemon -= 0.2
-                                        sugar -= 1
-                                        cups -= 1
-                                        ice -= 4
-                                        print("Lemonade sold for $"+str(price))
-                                        num = random.randint(0,4)
-                                        if num == 2:
-                                            if custRep < 0.5: 
-                                                print("Customer Satisfaction Increased.")
-                                                custRep+=0.02
+                                if testWeather(weather):
+                                    if testInventory(lemon-0.2,sugar-1,cups-1,ice-2):
+                                        if checkPrice(price,recomSellPrice):
+                                            money += price
+                                            lemon -= 0.2
+                                            sugar -= 1
+                                            cups -= 1
+                                            ice -= 2
+                                            print("Lemonade sold for $"+str(price));time.sleep(gameSpeed/4)
+                                            num = random.randint(0,4)
+                                            if num == 2:
+                                                if custRep < 0.5: 
+                                                    print("Customer Satisfaction Increased.");time.sleep(gameSpeed/8)
+                                                    custRep+=0.02
+                                        else:
+                                            print("Customer left due to prices being too high");time.sleep(gameSpeed/4)
+                                            if (custRep-0.05) >= 0:
+                                                custRep-=0.05
+                                                print("Customer Satisfaction Decreased.");time.sleep(gameSpeed/8)
                                     else:
-                                        print("Customer left due to prices being too high")
+                                        print("You are out of supplies...")
+                                        print("CLOSING SHOP...");time.sleep(gameSpeed)
+                                        if custRep > 0.1:
+                                            custRep -= 0.1
+                                            print("Customer Satisfaction Decreased.");time.sleep(gameSpeed/2)
+                                        closed = True
+                                        time.sleep(delay)
                                 else:
-                                    print("You are out of supplies...")
-                                    print("CLOSING SHOP...");time.sleep(delay*3)
-                                    if custRep > 0.1:
-                                        custRep -= 0.1
-                                        print("Customer Satisfaction Decreased.")
-                                    closed = True
-                                    time.sleep(delay)
+                                    custDetur+=1
                             elif choice == 1:
-                                if testInventory(lemon-0.2,sugar-1,cups-1,ice-1):
-                                    if checkPrice(price,recomSellPrice):
-                                        money += (price*2)
-                                        lemon -= 0.4
-                                        sugar -= 2
-                                        cups -= 2
-                                        ice -= 8
-                                        print("Lemonade sold for $"+str(price*2))
-                                        num = random.randint(0,4)
-                                        if num == 2:
-                                            if custRep < 0.5:
-                                                print("Customer Satisfaction Increased.")
-                                                custRep+=0.02
+                                if testWeather(weather):
+                                    if testInventory(lemon-0.4,sugar-2,cups-2,ice-4):
+                                        if checkPrice(price,recomSellPrice):
+                                            money += (price*2)
+                                            lemon -= 0.4
+                                            sugar -= 2
+                                            cups -= 2
+                                            ice -= 4
+                                            print("Lemonade sold for $"+str(price*2));time.sleep(gameSpeed/4)
+                                            num = random.randint(0,4)
+                                            if num == 2:
+                                                if custRep < 0.5:
+                                                    print("Customer Satisfaction Increased.");time.sleep(gameSpeed/8)
+                                                    custRep+=0.02
+                                        else:
+                                            print("Customer left due to prices being too high");time.sleep(gameSpeed/4)
+                                            if (custRep-0.05) >= 0:
+                                                custRep-=0.05
+                                                print("Customer Satisfaction Decreased.");time.sleep(gameSpeed/8)
                                     else:
-                                        print("Customer left due to prices being too high")
+                                        print("You are out of supplies...")
+                                        print("CLOSING SHOP...");time.sleep(gameSpeed)
+                                        if custRep > 0.1:
+                                            custRep -= 0.1
+                                            print("Customer Satisfaction Decreased.");time.sleep(gameSpeed/2)
+                                        closed = True;time.sleep(gameSpeed)
                                 else:
-                                    print("You are out of supplies...")
-                                    print("CLOSING SHOP...");time.sleep(delay*3)
-                                    if custRep > 0.1:
-                                        custRep -= 0.1
-                                        print("Customer Satisfaction Decreased.")
-                                    closed = True
-                                    time.sleep(delay)
+                                    custDetur+=2
                             elif choice == 2:
                                 ice -= 2
-                                print("...")
-                                time.sleep(delay)
+                                print("...");time.sleep(gameSpeed)
                         else:
                             money = money
+                        
                     if closed == False:
                         lemon = math.floor(lemon)
                         # time
                         print('\n'*1)### NEW LINES ###
-                        print('-'*30);print('Hourly Report');print('-'*30+'\n');hour+=1
-                        time.sleep(delay*3)
-                        clockList = clockData(pace,day,m,hour,minute)
+                        print('-'*30);print('Hourly Report');print('-'*30+'\n');hour+=1;time.sleep(gameSpeed)
+                        clockList = clockData(day,m,hour,minute)
                         day = clockList[0]
                         m = clockList[1]
                         hour = clockList[2]
                         minute = clockList[3]
                         gameTime = clockList[4]
                         print(gameTime);print('-'*30);print('')
-                        time.sleep(0.1)
+                        time.sleep(gameSpeed)
                         print("Money: $%.2f"%float(money))
                         print('Lemons: '+str(lemon))
                         print('Sugar: '+str(sugar)+' oz')
                         print('ice: '+str(ice)+' cubes')
-                        print('cups: '+str(cups));print('')
+                        print('cups: '+str(cups))
+                        print('\nCustomers Deturred By Weather: '+str(custDetur));print('');time.sleep(gameSpeed)
                         while ask:
                             print('1. Continue');print('2. Close Early');print('3. Continue, Do not ask again \n')
-                            choice = input("Select Option: ")
+                            choice = input("Select Option: ");time.sleep(gameSpeed)
                             choiceList = ['1','2','3']
                             while choice not in choiceList:
                                 print("ERROR: Must enter a number...")
-                                choice = input("Select Option: ")
+                                choice = input("Select Option: ");time.sleep(gameSpeed)
                             if choice == '1':
                                 break
                             if choice == '2':
-                                print("Closing Shop...")
+                                print("Closing Shop...");time.sleep(gameSpeed)
                                 Open = False
                                 break
                             if choice == '3':
@@ -596,22 +650,22 @@ while run:
                         if hour >= closeHour and m == 'pm':
                             Open = False
                     else:
-                        print('-'*30);print('CLOSING...');print('-'*30+'\n\n')
+                        print('-'*30);print('CLOSING...');print('-'*30+'\n\n');time.sleep(gameSpeed)
                         lemon = round(lemon)
                         print("Money: $%.2f"%float(money))
                         print('Lemons: '+str(lemon))
                         print('Sugar: '+str(sugar)+' oz')
                         print('ice: '+str(ice)+' cubes')
-                        print('cups: '+str(cups)+'\n')
+                        print('cups: '+str(cups)+'\n');time.sleep(gameSpeed)
                         break
                 else: # Closed
-                    print('-'*30);print('CLOSING...');print('-'*30+'\n\n')
+                    print('-'*30);print('CLOSING...');print('-'*30+'\n\n');time.sleep(gameSpeed)
                     lemon = round(lemon)
                     print("Money: $%.2f"%float(money))
                     print('Lemons: '+str(lemon))
                     print('Sugar: '+str(sugar)+' oz')
                     print('ice: '+str(ice)+' cubes')
-                    print('cups: '+str(cups));print('')
+                    print('cups: '+str(cups));print('');time.sleep(gameSpeed)
             #calc ads
             days = 0
             for ct in range(0,len(curAds)):
@@ -620,24 +674,25 @@ while run:
                 days = int(days)-1
                 if days < 0:
                     curAds.pop(ct)
-                    print("Campaign Ended...")
+                    print("Campaign Ended...");time.sleep(gameSpeed/2)
                 else:
                     tmpList[2] = days; curAds[ct] = tmpList
-                    print(str(tmpList[0])+": "+str(tmpList[2])+" days left")
+                    print(str(tmpList[0])+": "+str(tmpList[2])+" days left");time.sleep(gameSpeed/2)
             else:
                 if testInventory(lemon-0.2,sugar-1,cups-1,ice-1) == False:
-                    print("You are out of supplies...\n");time.sleep(delay*3)
+                    print("You are out of supplies...\n");time.sleep(gameSpeed)
             day+=1
-            clockList = clockData(pace,day,m,hour,minute)
+            clockList = clockData(day,m,hour,minute)
             day = clockList[0]
             m = clockList[1]
             hour = clockList[2]
             minute = clockList[3]
             gameTime = clockList[4]
-            print(gameTime+'\n')
+            print(gameTime+'\n');time.sleep(gameSpeed/2)
+            weather = getWeather()
         elif option == '5':
             day+=1
-            print("Closing shop for the day...\n");days = 0
+            print("Closing shop for the day...\n");days=0
             if len(curAds) > 0:
                 for ct in range(0,len(curAds)):
                     tmpList = curAds[ct]
@@ -651,15 +706,17 @@ while run:
                         print(str(tmpList[0])+": "+str(tmpList[2])+" days left")
                 else:
                     if testInventory(lemon-0.2,sugar-1,cups-1,ice-1) == False:
-                        print("You are out of supplies...\n");time.sleep(delay*3)
-            clockList = clockData(pace,day,m,hour,minute)
+                        print("You are out of supplies...\n");time.sleep(gameSpeed)
+            clockList = clockData(day,m,hour,minute)
             day = clockList[0]
             m = clockList[1]
             hour = clockList[2]
             minute = clockList[3]
             gameTime = clockList[4]
-            print(gameTime+'\n')
+            print(gameTime+'\n');time.sleep(gameSpeed/2)
+            weather = getWeather()
         elif option == '6':
+            print('\n'*30)
             print('\n'+'='*30+'\n')
             print("Money: $%.2f"%float(money)+'\n')
             print("Lemonade sell price: $%.2f"%float(price))
@@ -687,35 +744,62 @@ while run:
                     tmpList = curAds[ct]
                     print("  > "+str(tmpList[0])+"  - Days Left: "+str(tmpList[2]))
             print('\n'+'='*30)
-            choice = input("Continue: ")
+            choice = input("Continue: ");time.sleep(gameSpeed)
         elif option == '7':
             print('\n'+'-'*30);print('Settings\n'+'-'*30)
             print('1. Lemonade Price')
             print('2. Game Speed')
-            menuList = ['1','2']
-            option = input("Select Option: ")
+            print('3. Store Open Hour')
+            print('4. Store Closing Hour')
+            menuList = ['1','2','3','4']
+            option = input("Select Option: ");time.sleep(gameSpeed)
             while option not in menuList:
                 print("ERROR: option must be a number...")
-                option = input("Select Option: ")
+                option = input("Select Option: ");time.sleep(gameSpeed)
             if option == '1':
-                checking = True
                 print('Current Lemonade Price: $%.2f'%float(price))
-                tmp = input('New Lemonade Price: ')
+                tmp = input('New Lemonade Price: ');time.sleep(gameSpeed)
                 while testFloat(tmp)==False:
                     print("ERROR: option must be a number")
-                    tmp = input('New Lemonade Price: ')
+                    tmp = input('New Lemonade Price: ');time.sleep(gameSpeed)
                 price = float(tmp)
-                print('Lemonade price set to: '+str(price))
+                print('Lemonade price set to: '+str(price));time.sleep(gameSpeed)
+            elif option == '2':
+                print('Current Game Speed: '+str(gameSpeed))
+                tmp = input('New Game Speed: ');time.sleep(gameSpeed)
+                while testFloat(tmp)==False:
+                    print("ERROR: option must be a number")
+                    tmp = input('New Game Speed: ');time.sleep(gameSpeed)
+                gameSpeed = float(tmp)
+                print('Game Speed set to: '+str(gameSpeed));time.sleep(gameSpeed)
+            elif option == '3':
+                print('Current Open Hour: '+str(openHour))
+                tmp = input("New Open Hour Time: ");time.sleep(gameSpeed)
+                tmpList = ['6','7','8','9','10','11']
+                while tmp not in tmpList:
+                    print("Must be an hour between 6-11")
+                    tmp = input("New Open Hour Time: ");time.sleep(gameSpeed)
+                openHour = int(tmp)
+                print('Open Hour set to: '+str(openHour));time.sleep(gameSpeed)
+            elif option == '4':
+                print('Current Closing Hour: '+str(closeHour))
+                tmp = input("New Closing Hour Time: ");time.sleep(gameSpeed)
+                tmpList = ['12','1','2','3','4','5','6','7','8','9','10','11']
+                while tmp not in tmpList:
+                    print("Must be an hour between 12-11")
+                    tmp = input("New Closing Hour Time: ");time.sleep(gameSpeed)
+                closeHour = int(tmp)
+                print('Closing Hour set to: '+str(closeHour));time.sleep(gameSpeed)
         elif option == '8':
-            saveGame()
+            saveGame();time.sleep(gameSpeed)
         elif option == '9':
             choiceList=['y','n']
-            choice = input("Would you like to save before quiting? [y/n]: ")
+            choice = input("Would you like to save before quiting? [y/n]: ");time.sleep(gameSpeed)
             while choice not in choiceList:
                 print("ERROR: option must be 'y' or 'n'")
-                choice = input("Would you like to save before quiting? [y/n]: ")
+                choice = input("Would you like to save before quiting? [y/n]: ");time.sleep(gameSpeed)
             if choice == 'y':
-                saveGame()
+                saveGame();time.sleep(gameSpeed)
             menu = False
             run = False
 print('done')
