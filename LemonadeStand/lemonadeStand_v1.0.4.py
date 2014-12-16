@@ -5,12 +5,13 @@ Description: Game of Selling Lemonade
 
 __author__ = "Spencer Dockham"
 __date__ = "12/14/2014"
-__version__ = '1.0.3'
+__version__ = '1.0.5'
 
 import time
 import random
 import math
 import os
+import numbers
 
 def is_number(s):
     try:
@@ -52,6 +53,38 @@ def testInventory(lemon,sugar,cups,ice):
         return False
     return True
 
+def testFloat(num):
+    numbet=['1','2','2','3','4','5','6','7','8','9','0','.']
+    cnt=0
+    for ct in num:
+        if ct not in numbet:
+            return False
+        if '.' == ct:
+            cnt+=1
+        if cnt > 1:
+            return False
+    foo = num.split('.')
+    if cnt == 1:
+        if len(foo[1]) > 2:
+            print("Invalid input: can't enter number less than one cent.")
+            return False
+    return True
+
+def checkPrice(num,recom):
+    if num <= recom:
+        return True
+    foo = random.randint(0,9)
+    if num <= recom*2:
+        if foo < 4:
+            return True
+    if num <= recom*3:
+        if foo < 2:
+            return True
+    if num <= recom*4:
+        if foo < 1:
+            return True
+    return False
+
 def saveGame():
     dataList = []
     dataList.append(money)
@@ -71,6 +104,7 @@ def saveGame():
     dataList.append(m)
     dataList.append(hour)
     dataList.append(minute)
+    dataList.append(recomSellPrice)
     tmpStr = ''
     for ct in range(0,len(dataList)):
         tmpStr+=str(dataList[ct])+','
@@ -112,6 +146,8 @@ if not os.path.exists('data\dataV'+__version__+'.txt'):
     gameTime = ''
     clockList = []
     pace = 1
+    recomSellPrice = 0.5
+    curAds=[]
     saveGame()
     print("NEW GAME CREATED...")
 else:
@@ -139,11 +175,11 @@ else:
         m = str(dataList[14])
         hour = int(dataList[15])
         minute = int(dataList[16])
-
+        recomSellPrice = float(dataList[17])
+        curAds=[]
         # loading ads
-        tmpIndex = (len(dataList)-17)
+        tmpIndex = (len(dataList)-18)
         steps = (tmpIndex/4);tmpAd=[]
-        curAds = []
         for ct in range(0,int(steps)):
             tmpAd=[dataList[17+(ct*4)],dataList[17+(ct*4)+1],dataList[17+(ct*4)+2],dataList[17+(ct*4)+3]]
             curAds.append(tmpAd)
@@ -160,10 +196,12 @@ sugarPrice=0.05
 cupPrice=0.1
 icePrice=0.2
 
+recomSellPrice = 0.5
+
 delay = 0.2
 
 # Type, Cost, Dur(days), result(%)4
-adList = [['Megazine','70','7','20'],['TV','150','4','60'],['Radio','95','7','35']]
+adList = [['Megazine','70','7','20'],['TV','150','4','60'],['Radio','95','5','35']]
 
 # MAIN
 run = True
@@ -191,9 +229,10 @@ while run:
         print("4. Open Store")
         print("5. Close for the day")
         print("6. Shop Details")
-        print("7. Save Game")
-        print("8. Quit")
-        menuList = ['1','2','3','4','5','6','7','8']
+        print("7. Settings")
+        print("8. Save Game")
+        print("9. Quit")
+        menuList = ['1','2','3','4','5','6','7','8','9']
         option = input("Select Option: ")
         while option not in menuList:
             print("ERROR: option must be a number...")
@@ -304,7 +343,6 @@ while run:
             for ct in range(0,len(curAds)):
                 tmpList = curAds[ct]
                 print("  > "+str(tmpList[0])+"  - Days Left: "+str(tmpList[2]))
-            print('curads: '+str(curAds))
             print("\nMoney: $%.2f"%float(money))
             print("Ad Campaign's Available:");adTmpList = []
             for ct in range(0,len(adList)):
@@ -390,6 +428,7 @@ while run:
                             upgradeIndex += 1
                             shopRep += (upgradeIndex*.1)
                             custRep += 0.1
+                            recomSellPrice += 0.1
                             print("Customer Satisfaction Increased.")
                             print("\nCost: $%.2f"%float(cost))
                             print("Money: $%.2f"%float(money))
@@ -416,6 +455,7 @@ while run:
                         shopIndex += 1
                         custLimit += (shopIndex*10)
                         custRep += 0.1
+                        recomSellPrice += 0.5
                         print("Customer Satisfaction Increased.")
                         print("\nCost: $%.2f"%float(cost))
                         print("Money: $%.2f"%float(money))
@@ -467,17 +507,20 @@ while run:
                             choice = random.choice(choiceList)
                             if choice == 0:
                                 if testInventory(lemon-0.2,sugar-1,cups-1,ice-1):
-                                    money += price
-                                    lemon -= 0.2
-                                    sugar -= 1
-                                    cups -= 1
-                                    ice -= 4
-                                    print("Lemonade sold for $"+str(price))
-                                    num = random.randint(0,4)
-                                    if num == 2:
-                                        if custRep < 0.5: 
-                                            print("Customer Satisfaction Increased.")
-                                            custRep+=0.02
+                                    if checkPrice(price,recomSellPrice):
+                                        money += price
+                                        lemon -= 0.2
+                                        sugar -= 1
+                                        cups -= 1
+                                        ice -= 4
+                                        print("Lemonade sold for $"+str(price))
+                                        num = random.randint(0,4)
+                                        if num == 2:
+                                            if custRep < 0.5: 
+                                                print("Customer Satisfaction Increased.")
+                                                custRep+=0.02
+                                    else:
+                                        print("Customer left due to prices being too high")
                                 else:
                                     print("You are out of supplies...")
                                     print("CLOSING SHOP...");time.sleep(delay*3)
@@ -488,17 +531,20 @@ while run:
                                     time.sleep(delay)
                             elif choice == 1:
                                 if testInventory(lemon-0.2,sugar-1,cups-1,ice-1):
-                                    money += (price*2)
-                                    lemon -= 0.4
-                                    sugar -= 2
-                                    cups -= 2
-                                    ice -= 8
-                                    print("Lemonade sold for $"+str(price*2))
-                                    num = random.randint(0,4)
-                                    if num == 2:
-                                        if custRep < 0.5:
-                                            print("Customer Satisfaction Increased.")
-                                            custRep+=0.02
+                                    if checkPrice(price,recomSellPrice):
+                                        money += (price*2)
+                                        lemon -= 0.4
+                                        sugar -= 2
+                                        cups -= 2
+                                        ice -= 8
+                                        print("Lemonade sold for $"+str(price*2))
+                                        num = random.randint(0,4)
+                                        if num == 2:
+                                            if custRep < 0.5:
+                                                print("Customer Satisfaction Increased.")
+                                                custRep+=0.02
+                                    else:
+                                        print("Customer left due to prices being too high")
                                 else:
                                     print("You are out of supplies...")
                                     print("CLOSING SHOP...");time.sleep(delay*3)
@@ -527,7 +573,7 @@ while run:
                         gameTime = clockList[4]
                         print(gameTime);print('-'*30);print('')
                         time.sleep(0.1)
-                        print("Money: $"+str(money))
+                        print("Money: $%.2f"%float(money))
                         print('Lemons: '+str(lemon))
                         print('Sugar: '+str(sugar)+' oz')
                         print('ice: '+str(ice)+' cubes')
@@ -552,7 +598,7 @@ while run:
                     else:
                         print('-'*30);print('CLOSING...');print('-'*30+'\n\n')
                         lemon = round(lemon)
-                        print("Money: $"+str(money))
+                        print("Money: $%.2f"%float(money))
                         print('Lemons: '+str(lemon))
                         print('Sugar: '+str(sugar)+' oz')
                         print('ice: '+str(ice)+' cubes')
@@ -561,7 +607,7 @@ while run:
                 else: # Closed
                     print('-'*30);print('CLOSING...');print('-'*30+'\n\n')
                     lemon = round(lemon)
-                    print("Money: $"+str(money))
+                    print("Money: $%.2f"%float(money))
                     print('Lemons: '+str(lemon))
                     print('Sugar: '+str(sugar)+' oz')
                     print('ice: '+str(ice)+' cubes')
@@ -616,13 +662,15 @@ while run:
         elif option == '6':
             print('\n'+'='*30+'\n')
             print("Money: $%.2f"%float(money)+'\n')
-            print("Lemonade sell price: $%.2f"%float(price)+'\n')
-            print("INVENTORY");print('-'*30)
+            print("Lemonade sell price: $%.2f"%float(price))
+            if int(shopIndex) > 1:
+                print("Recommended selling price: $%.2f"%float(recomSellPrice))
+            print("\nINVENTORY");print('-'*30)
             print('Lemons: '+str(lemon))
             print('Sugar: '+str(sugar)+' oz')
             print('Ice: '+str(ice)+' cubes')
             print('Cups: '+str(cups)+'\n')
-            print('-'*30+'\n')
+            print('-'*30)
             print('Customer Limit: '+str(custLimit))
             print('Shop Reputation Bonus: '+str(shopRep*100)+'%')
             print('Customer Satisfaction Bonus: %.1f'%float(custRep*100)+'%');print('')
@@ -630,7 +678,7 @@ while run:
             print('Shop Upgrade: '+str(upgradeIndex)+'/'+str(len(upgradeCost)));print('')
             print('Open Hour: '+str(openHour)+":00 am")
             print('Close Hour: '+str(closeHour)+":00 pm\n")
-            print('-'*30+'\n')
+            print('-'*30)
             print("Current  Ads:")
             if len(curAds) == 0:
                 print("  > NONE")
@@ -638,10 +686,29 @@ while run:
                 for ct in range(0,len(curAds)):
                     tmpList = curAds[ct]
                     print("  > "+str(tmpList[0])+"  - Days Left: "+str(tmpList[2]))
-            print('\n'+'='*30+'\n')
+            print('\n'+'='*30)
+            choice = input("Continue: ")
         elif option == '7':
-            saveGame()
+            print('\n'+'-'*30);print('Settings\n'+'-'*30)
+            print('1. Lemonade Price')
+            print('2. Game Speed')
+            menuList = ['1','2']
+            option = input("Select Option: ")
+            while option not in menuList:
+                print("ERROR: option must be a number...")
+                option = input("Select Option: ")
+            if option == '1':
+                checking = True
+                print('Current Lemonade Price: $%.2f'%float(price))
+                tmp = input('New Lemonade Price: ')
+                while testFloat(tmp)==False:
+                    print("ERROR: option must be a number")
+                    tmp = input('New Lemonade Price: ')
+                price = float(tmp)
+                print('Lemonade price set to: '+str(price))
         elif option == '8':
+            saveGame()
+        elif option == '9':
             choiceList=['y','n']
             choice = input("Would you like to save before quiting? [y/n]: ")
             while choice not in choiceList:
