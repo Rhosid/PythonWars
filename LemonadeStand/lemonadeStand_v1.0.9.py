@@ -4,8 +4,8 @@ Description: Game of Selling Lemonade
 """
 
 __author__ = "Spencer Dockham"
-__date__ = "12/14/2014"
-__version__ = '1.0.8'
+__date__ = "12/19/2014"
+__version__ = '1.0.9'
 
 import time
 import random
@@ -89,12 +89,12 @@ def getWeather():
     weather = ''
     wList = ['clear','clear','clear','clear','clear','clear','clear','clear','clear',
              'partly cloudy','partly cloudy','partly cloudy',
-             'rainy','rainy','rainy'
+             'rainy','rainy','rainy',
              'foggy','foggy',
              'thunderstorms',
              'windy',
-             'hailing']
-    num = random.randint(0,len(wList))
+             'hailing','hailing']
+    num = random.randint(0,len(wList)-1)
     string = str(wList[num])
     return string
 
@@ -149,6 +149,7 @@ def saveGame():
     dataList.append(recomSellPrice)
     dataList.append(gameSpeed)
     dataList.append(weather)
+    dataList.append(reportDelay)
     tmpStr = ''
     for ct in range(0,len(dataList)):
         tmpStr+=str(dataList[ct])+','
@@ -159,80 +160,67 @@ def saveGame():
             tmpAds+=str(tmpList[cnt])+','
     tmpStr+=tmpAds
     tmpStr = tmpStr[:-1]
-    with open('data\dataV'+__version__+'.txt','w') as file:
+    with open('data/'+user+__version__+'.txt','w') as file:
         file.write(tmpStr)
         print("Game Saved...")
 
-# LOAD DATA
 print("LEMONADE STAND GAME");time.sleep(1)
-if not os.path.exists('data\dataV'+__version__+'.txt'):
-    print("No Save Data Found...");time.sleep(1)
-    money = 250
-    price = 0.5
-    lemon = 100
-    sugar = 100
-    cups = 50
-    ice = 400
-    shopRep = 0.1
-    custRep = 0.0
-    custLimit = 10
-    shopIndex = 0
-    upgradeIndex = 0
-    openHour = 10
-    closeHour = 4
-    day = 1
-    m = 'am'
-    hour = openHour
-    minute = 0
-    gameTime = ''
-    clockList = []
-    recomSellPrice = 0.5
-    gameSpeed = float(1)
-    weather = 'clear'
-    curAds=[]
-    saveGame()
-    print("NEW GAME CREATED...");time.sleep(gameSpeed)
-else:
-    print("Loading save data...");time.sleep(1)
-    with open('data\dataV'+__version__+'.txt','r') as file:
-        data = file.read()
-        lineList=data.split(',')
-        dataList=[]
-        for line in lineList:
-            dataList.append(line)
-        money = float(dataList[0])
-        price = float(dataList[1])
-        lemon = int(dataList[2])
-        sugar = int(dataList[3])
-        cups = int(dataList[4])
-        ice = int(dataList[5])
-        shopRep = float(dataList[6])
-        custRep = float(dataList[7])
-        custLimit = int(dataList[8])
-        shopIndex = int(dataList[9])
-        upgradeIndex = int(dataList[10])
-        openHour = int(dataList[11])
-        closeHour = int(dataList[12])
-        day = int(dataList[13])
-        m = str(dataList[14])
-        hour = int(dataList[15])
-        minute = int(dataList[16])
-        recomSellPrice = float(dataList[17])
-        gameSpeed = float(dataList[18])
-        weather = str(dataList[19])
-        curAds=[]
-        # loading ads
-        tmpIndex = (len(dataList)-20)
-        steps = (tmpIndex/4);tmpAd=[]
-        for ct in range(0,int(steps)):
-            tmpAd=[dataList[17+(ct*4)],dataList[17+(ct*4)+1],dataList[17+(ct*4)+2],dataList[17+(ct*4)+3]]
-            curAds.append(tmpAd)
-        clockList = []
-        clockList = clockData(day,m,hour,minute)
-        gameTime = clockList[4]
+# LOGIN
+login = True
+print('Attempting to login')
+while login:
+    user = input("Please enter your username: ")
+    while not os.path.exists('data/'+user+__version__+'.txt'):
+        print("No Info Found...")
+        print('1. New Game')
+        print('2. Try Again')
+        tmpList = ['1','2']
+        choice = input("Please choose and option: ")
+        while choice not in tmpList:
+            print("ERROR: Couldn't read choice...")
+            choice = input("Please choose and option: ")
+        if choice == '1':
+            money = 250;price = 0.5;lemon = 100;sugar = 100
+            cups = 50;ice = 400;shopRep = 0.1;custRep = 0.0
+            custLimit = 10;shopIndex = 0;upgradeIndex = 0
+            openHour = 10;closeHour = 4;day = 1;m = 'am'
+            hour = openHour;minute = 0;gameTime = '';clockList = []
+            recomSellPrice = 0.5;gameSpeed = float(1);weather = 'clear'
+            reportDelay = 1
+            curAds=[];saveGame()
+            print("NEW GAME CREATED...");time.sleep(gameSpeed)
+            login = False
+            break
+        elif choice == '2':
+            user = input("Please enter your username: ")
+    else:
+        print("Loading save data...");time.sleep(1)
+        with open('data/'+user+__version__+'.txt','r') as file:
+            data = file.read();lineList=data.split(',');dataList=[]
+            for line in lineList:
+                dataList.append(line)
+            money = float(dataList[0]);price = float(dataList[1]);lemon = int(dataList[2])
+            sugar = int(dataList[3]);cups = int(dataList[4]);ice = int(dataList[5])
+            shopRep = float(dataList[6]);custRep = float(dataList[7]);custLimit = int(dataList[8])
+            shopIndex = int(dataList[9]);upgradeIndex = int(dataList[10]);openHour = int(dataList[11])
+            closeHour = int(dataList[12]);day = int(dataList[13]);m = str(dataList[14])
+            hour = int(dataList[15]);minute = int(dataList[16]);recomSellPrice = float(dataList[17])
+            gameSpeed = float(dataList[18]);weather = str(dataList[19]);v=dataList[20];reportDelay=dataList[21];curAds=[]
+            # loading ads
+            tmpIndex = (len(dataList)-22)
+            steps = (tmpIndex/4);tmpAd=[]
+            for ct in range(0,int(steps)):
+                tmpAd=[dataList[17+(ct*4)],dataList[17+(ct*4)+1],dataList[17+(ct*4)+2],dataList[17+(ct*4)+3]]
+                curAds.append(tmpAd)
+            clockList = [];clockList = clockData(day,m,hour,minute)
+            gameTime = clockList[4]
+        if v != __version__:
+            print("VERSION OUT OF DATE\n"*10)
+        print('logged in')
+        login = False
                
 # vars
-shopCost = [250,500,1000,1500,2500]
+shopCost = [250,500,1000,1500,2500,5000,10000,50000,100000,500000,1000000]
 upgradeCost = [25,50,100,250,500]
 lemonPrice = 0.5
 sugarPrice=0.05
@@ -439,8 +427,10 @@ while run:
                 break
         elif option == '3':
             print("Upgrading shop...\n")
-            print("1. Upgrade Current Stand")
-            print("2. Buy New Stand")
+            cost = upgradeCost[upgradeIndex];cost = cost*(shopIndex+1) 
+            print("1. Upgrade Current Stand: $%.2f"%float(cost))
+            cost = shopCost[shopIndex]
+            print("2. Buy New Stand: $%.2f"%float(cost))
             print("3. Back")
             menuList = ['1','2','3']
             option = input("Select Option: ");time.sleep(gameSpeed)
@@ -454,6 +444,7 @@ while run:
                     print("Consider upgrading to a new shop.");time.sleep(gameSpeed)
                 else:
                     cost = upgradeCost[upgradeIndex]
+                    cost = cost*(shopIndex+1)
                     print("Money: $%.2f"%float(money))
                     print("Upgrad Current Stand: $%.2f"%float(cost))
                     choiceList=['y','n']
@@ -541,7 +532,7 @@ while run:
                     custs = round(custs)
                     if custs > custLimit:
                         custs = custLimit
-                    #print("Customers: "+str(custs));time.sleep(gameSpeed)
+                    print("Customers: "+str(custs));time.sleep(gameSpeed)
                     choiceList = [0,1,2]
                     closed = False
                     for ct in range(0,custs):
@@ -729,8 +720,8 @@ while run:
             print('Cups: '+str(cups)+'\n')
             print('-'*30)
             print('Customer Limit: '+str(custLimit))
-            print('Shop Reputation Bonus: '+str(shopRep*100)+'%')
-            print('Customer Satisfaction Bonus: %.1f'%float(custRep*100)+'%');print('')
+            print('Shop Reputation Bonus: %.0f'%float(shopRep*100)+'%')
+            print('Customer Satisfaction Bonus: %.0f'%float(custRep*100)+'%');print('')
             print('Shop: '+str(shopIndex+1)+'/'+str(len(shopCost)+1))
             print('Shop Upgrade: '+str(upgradeIndex)+'/'+str(len(upgradeCost)));print('')
             print('Open Hour: '+str(openHour)+":00 am")
@@ -751,7 +742,8 @@ while run:
             print('2. Game Speed')
             print('3. Store Open Hour')
             print('4. Store Closing Hour')
-            menuList = ['1','2','3','4']
+            print('5. Back')
+            menuList = ['1','2','3','4','5']
             option = input("Select Option: ");time.sleep(gameSpeed)
             while option not in menuList:
                 print("ERROR: option must be a number...")
@@ -790,6 +782,8 @@ while run:
                     tmp = input("New Closing Hour Time: ");time.sleep(gameSpeed)
                 closeHour = int(tmp)
                 print('Closing Hour set to: '+str(closeHour));time.sleep(gameSpeed)
+            elif option == '5':
+                continue
         elif option == '8':
             saveGame();time.sleep(gameSpeed)
         elif option == '9':
