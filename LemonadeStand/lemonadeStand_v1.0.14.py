@@ -4,8 +4,8 @@ Description: Game of Selling Lemonade
 """
 
 __author__ = "Spencer Dockham"
-__date__ = "12/26/2014"
-__version__ = '1.0.12'
+__date__ = "12/27/2014"
+__version__ = '1.0.14'
 
 import time
 import random
@@ -181,47 +181,50 @@ def saveGame():
     dataList.append(reportDelay)
     numAds=len(curAds)
     dataList.append(numAds)
-    tmpStr = ''
+    dataList.append(printSales)
+    tmpStr=''
     for ct in range(0,len(dataList)):
         tmpStr+=str(dataList[ct])+','
-    tmpAds = ''; tmpList = []
-    if len(curAds)>0:
-        for ct in range(0,len(curAds)):
-            tmpList = curAds[ct]
-            for cnt in range(0,len(tmpList)):
-                tmpAds+=str(tmpList[cnt])+','
-        tmpStr+=tmpAds
-    tmpLoans=''
-    if len(loanList)>0:
-        for ct in range(0,len(loanList)):
-            tmpList = loanList[ct]
-            for cnt in range(0,len(tmpList)):
-                tmpLoans+=str(tmpList[cnt])+','
-        tmpStr+=tmpLoans
     tmpStr = tmpStr[:-1]
-    with open('data/'+user+'_keycard'+'.txt','w') as file:
+    tmpStr=hexi(tmpStr)
+    with open('data/core/core'+user+__version__+'.txt','w') as file:
         file.write(tmpStr)
-    tmpStr = hexi(tmpStr)
-    with open('data/'+user+__version__+'.txt','w') as file:
-        file.write(tmpStr)
-        print("Game Saved...")
+    tmpAds = ''; tmpList = []
+    for ct in range(0,len(curAds)):
+        tmpList = curAds[ct]
+        for cnt in range(0,len(tmpList)):
+            tmpAds+=str(tmpList[cnt])+','
+    tmpAds=tmpAds[:-1]
+    tmpAds=hexi(tmpAds)
+    with open('data/adco/adco'+user+__version__+'.txt','w') as file:
+        file.write(tmpAds)
+    tmpLoans='';tmpList=[]
+    for ct in range(0,len(loanList)):
+        tmpList = loanList[ct]
+        for cnt in range(0,len(tmpList)):
+            tmpLoans+=str(tmpList[cnt])+','
+    tmpLoans = tmpLoans[:-1]
+    tmpLoans=hexi(tmpLoans)
+    with open('data/loandeb/loandeb'+user+__version__+'.txt','w') as file:
+        file.write(tmpLoans)
+    print("Game Saved...")
 
 # dics used for encoding save file
-dicNum = {'0':'a','1':'b','2':'c','3':'d','4':'e','5':'f','6':'g','7':'h','8':'i','9':'j',
-       'a':'10','b':'11','c':'12','d':'13','e':'14','f':'15','g':'16','h':'17','i':'18','j':'19',
-       'k':'20','l':'21','m':'22','n':'23','o':'24','p':'25','q':'26','r':'27','s':'28','t':'29',
-       'u':'30','v':'31','w':'32','x':'33','y':'34','z':'35','A':'36','B':'37','C':'38','D':'39',
-       'E':'40','F':'41','G':'42','H':'43','I':'44','J':'45','K':'46','L':'47','M':'48','N':'49',
-       'O':'50','P':'51','Q':'52','R':'53','S':'54','T':'55','U':'46','V':'57','W':'58','X':'59',
-       'Y':'60','Z':'61','.':'*'
+dicNum = {'0':'34315','1':'80523','2':'91532','3':'11531','4':'01532','5':'71521','6':'41432','7':'51401','8':'61010','9':'20154',
+       'a':'33426','b':'81432','c':'92441','d':'12422','e':'02441','f':'72430','g':'42341','h':'52310','i':'62929','j':'21063',
+       'k':'32517','l':'82341','m':'93350','n':'13313','o':'03350','p':'73349','q':'43250','r':'53229','s':'63838','t':'22972',
+       'u':'31608','v':'83250','w':'94269','x':'14204','y':'04269','z':'74258','A':'44169','B':'54138','C':'64747','D':'23881',
+       'E':'30799','F':'84169','G':'95178','H':'15195','I':'05178','J':'75167','K':'45078','L':'55047','M':'65656','N':'24790',
+       'O':'39880','P':'85078','Q':'96087','R':'16086','S':'06087','T':'75076','U':'46987','V':'56956','W':'66565','X':'25609',
+       'Y':'38971','Z':'86987','.':'01490',' ':'02301','coretag':'coretag','adtag':'adtag','loantag':'loantag'
        }
-dicTrans = {'a':'0','b':'1','c':'2','d':'3','e':'4','f':'5','g':'6','h':'7','i':'8','j':'9',
-       '10':'a','11':'b','12':'c','13':'d','14':'e','15':'f','16':'g','17':'h','18':'i','19':'j',
-       '20':'k','21':'l','22':'m','23':'n','24':'o','25':'p','26':'q','27':'r','28':'s','29':'t',
-       '30':'u','31':'v','32':'w','33':'x','34':'y','35':'z','36':'A','37':'B','38':'C','39':'D',
-       '40':'E','41':'F','42':'G','43':'H','44':'I','45':'J','46':'K','47':'L','48':'M','49':'N',
-       '50':'0','51':'P','52':'Q','53':'R','54':'S','55':'T','56':'U','57':'V','58':'W','59':'X',
-       '60':'Y','61':'Z','*':'.'
+dicTrans = {'34315':'0','80523':'1','91532':'2','11531':'3','01532':'4','71521':'5','41432':'6','51401':'7','61010':'8','20154':'9',
+       '33426':'a','81432':'b','92441':'c','12422':'d','02441':'e','72430':'f','42341':'g','52310':'h','62929':'i','21063':'j',
+       '32517':'k','82341':'l','93350':'m','13313':'n','03350':'o','73349':'p','43250':'q','53229':'r','63838':'s','22972':'t',
+       '31608':'u','83250':'v','94269':'w','14204':'x','04269':'y','74258':'z','44169':'A','54138':'B','64747':'C','23881':'D',
+       '30799':'E','84169':'F','95178':'G','15195':'H','05178':'I','75167':'J','45078':'K','55047':'L','65656':'M','24790':'N',
+       '39880':'0','85078':'P','96087':'Q','16086':'R','06087':'S','75076':'T','46987':'U','56956':'V','66565':'W','25609':'X',
+       '38971':'Y','86987':'Z','01490':'.','02301':' ','coretag':'coretag','adtag':'adtag','loantag':'loantag'
        }
 
 print("LEMONADE STAND GAME");time.sleep(1)
@@ -230,7 +233,7 @@ login = True
 print('Attempting to login')
 while login:
     user = input("Please enter your username: ")
-    while not os.path.exists('data/'+user+__version__+'.txt'):
+    while not os.path.exists('data/core/core'+user+__version__+'.txt'):
         print("No Info Found...")
         print('1. New Game')
         print('2. Try Again')
@@ -240,13 +243,13 @@ while login:
             print("ERROR: Couldn't read choice...")
             choice = input("Please choose and option: ")
         if choice == '1':
-            money = 250;price = 0.5;lemon = 5100;sugar = 5100
+            money = 250000;price = 0.5;lemon = 5100;sugar = 5100
             cups = 5550;ice = 5400;shopRep = 0.1;custRep = 0.0
             custLimit = 10;shopIndex = 0;upgradeIndex = 0
             openHour = 10;closeHour = 4;day = 1;m = 'am'
             hour = openHour;minute = 0;gameTime = '';clockList = []
             recomSellPrice = 0.5;gameSpeed = float(1);weather = 'clear'
-            reportDelay = 1;numAds=0;
+            reportDelay = 1;numAds=0;printSales='t'
             curAds=[];loanList=[];saveGame()
             print("NEW GAME CREATED...");time.sleep(gameSpeed)
             login = False
@@ -255,12 +258,11 @@ while login:
             user = input("Please enter your username: ")
     else:
         print("Loading save data...");time.sleep(1)
-        with open('data/'+user+__version__+'.txt','r') as file:
-            data = file.read();data=decode(data);lineList=data.split(',');dataList=[]
+        with open('data/core/core'+user+__version__+'.txt','r') as file:
+            data = file.read()
+            data=decode(data);lineList=data.split(',');dataList=[]
             for line in lineList:
                 dataList.append(line)
-            for ct in range(0,len(dataList)):
-                tmp = dataList[ct]
             money = float(dataList[0]);price = float(dataList[1]);lemon = int(dataList[2])
             sugar = int(dataList[3]);cups = int(dataList[4]);ice = int(dataList[5])
             shopRep = float(dataList[6]);custRep = float(dataList[7]);custLimit = int(dataList[8])
@@ -268,24 +270,28 @@ while login:
             closeHour = int(dataList[12]);day = int(dataList[13]);m = str(dataList[14])
             hour = int(dataList[15]);minute = int(dataList[16]);recomSellPrice = float(dataList[17])
             gameSpeed = float(dataList[18]);weather = str(dataList[19]);v=dataList[20]
-            reportDelay=dataList[21];numAds=dataList[22];curAds=[];loanList=[]
-            if len(dataList)>22:
-                if int(numAds)>0:
-                    # loading ads
-                    tmpIndex = (len(dataList)-23)
-                    steps = (tmpIndex/4);tmpAd=[]
-                    for ct in range(0,int(steps)):
-                        tmpAd=[dataList[23+(ct*4)],dataList[23+(ct*4)+1],dataList[23+(ct*4)+2],dataList[23+(ct*4)+3]]
-                        curAds.append(tmpAd)
-                # loading loans
+            reportDelay=dataList[21];numAds=int(dataList[22]);printSales=str(dataList[23])
+        if os.path.exists('data/adco/adco'+user+__version__+'.txt'):
+            with open('data/adco/adco'+user+__version__+'.txt','r') as file:
+                data = file.read()
+                data=decode(data);lineList=data.split(',');dataList=[]
+                for line in lineList:
+                    dataList.append(line)
+                curAds=[]
+                for ct in range(0,int(math.floor(len(dataList)/4))):
+                    tmpAd=[];tmpAd=[dataList[(ct*4)],dataList[(ct*4)+1],dataList[(ct*4)+2],dataList[(ct*4)+3]]
+                    curAds.append(tmpAd)
+        if os.path.exists('data/loandeb/loandeb'+user+__version__+'.txt'):
+            with open('data/loandeb/loandeb'+user+__version__+'.txt','r') as file:
+                data = file.read()
+                data=decode(data);lineList=data.split(',');dataList=[]
+                for line in lineList:
+                    dataList.append(line)
                 loanList=[]
-                tmpIndex = (len(dataList)-(23+(len(curAds)*4)))
-                steps  = (tmpIndex/3);tmpLoan=[]
-                for ct in range(0,int(steps)):
-                    tmpLoan=[dataList[len(dataList)-int(tmpIndex*int(ct*3)+3)],
-                              dataList[len(dataList)-int(tmpIndex*int(ct*3)+2)],
-                              dataList[len(dataList)-int(tmpIndex*int(ct*3)+1)]]
+                for ct in range(0,int(math.floor(len(dataList)/3))):
+                    tmpLoan=[];tmpLoan=[dataList[(ct*4)],dataList[(ct*4)+1],dataList[(ct*4)+2]]
                     loanList.append(tmpLoan)
+            #clock
             clockList = [];clockList = clockData(day,m,hour,minute)
             gameTime = clockList[4]
         if v != __version__:
@@ -354,7 +360,7 @@ while run:
             print("Opening shop for the day...\n");time.sleep(gameSpeed)
             gameLoop=True
             # spawn customers
-            tmpList=[];tmpNum=10;custDetur=0;ask=True
+            tmpList=[];tmpNum=10;custDetur=0;ask=True;profit=float(0.0);count=0
             if len(curAds)>0:
                 for ct in range(0,len(curAds)):
                     tmpList = curAds[ct]
@@ -363,7 +369,6 @@ while run:
             custs = round((popMod+shopRep+custRep)*100)
             if custs > custLimit:
                 custs = custLimit
-            #print("Customers: "+str(custs));time.sleep(gameSpeed)
             hoursOpen=(closeHour+12)-openHour
             for ct in range(0,hoursOpen):
                 cnt = ct
@@ -407,47 +412,13 @@ while run:
                                 break
                 if gameLoop==False:
                     break
-                count=0;custNum=custs
                 for ct in range(0,custs):
                     if testWeather(weather):
                         if testInventory(lemon-0.4,sugar-2,cups-2,ice-4):
                             if checkPrice(price,recomSellPrice):
-                                if custNum>=10000:
-                                    if count>=5000:
-                                        print("5000x Lemonade sold for $"+str(price*5000));time.sleep(gameSpeed/4)
-                                        count=0
-                                elif custNum>=5000:
-                                    if count>=1000:
-                                        print("1000x Lemonade sold for $"+str(price*1000));time.sleep(gameSpeed/4)
-                                        count=0
-                                elif custNum >= 1000:
-                                    if count>=500:
-                                        print("500x Lemonade sold for $"+str(price*500));time.sleep(gameSpeed/4)
-                                        count=0
-                                elif custNum >= 500:
-                                    if count>=100:
-                                        print("100x Lemonade sold for $"+str(price*100));time.sleep(gameSpeed/4)
-                                        count=0
-                                elif custNum >= 100:
-                                    if count>=50:
-                                        print("50x Lemonade sold for $"+str(price*50));time.sleep(gameSpeed/4)
-                                        count=0
-                                elif custNum >= 50:
-                                    if count>=10:
-                                        print("10x Lemonade sold for $"+str(price*10));time.sleep(gameSpeed/4)
-                                        count=0
-                                elif custNum >= 10:
-                                    if count>=5:
-                                        print("5x Lemonade sold for $"+str(price*5));time.sleep(gameSpeed/4)
-                                        count=0
-                                elif custNum >= 6:
-                                    if count>=2:
-                                        print("2x Lemonade sold for $"+str(price*2));time.sleep(gameSpeed/4)
-                                        count=0
-                                elif custNum >= 0:
+                                if printSales=='t':
                                     print("Lemonade sold for $"+str(price));time.sleep(gameSpeed/4)
-                                money += (price);lemon -= 0.2;sugar -= 1;cups -= 1;ice -= 2
-                                count+=1
+                                money+=price;profit+=price;count+=1;lemon-=0.2;sugar-=1;cups-=1;ice-=2
                                 num = random.randint(0,4)
                                 if num == 2:
                                     if custRep < 0.5:
@@ -471,7 +442,6 @@ while run:
                     else:
                         if gameLoop:
                             custDetur+=1
-                    custNum-=1
                 hour+=1
                 clockList = clockData(day,m,hour,minute)
                 day = clockList[0]
@@ -480,7 +450,8 @@ while run:
                 minute = clockList[3]
                 gameTime = clockList[4]
                 print(str(gameTime))
-            print('Shop Closed')
+            print('\nShop Closed\n');time.sleep(gameSpeed/2)
+            print('-'*30)
             days = 0
             if len(curAds)>0:
                 for ct in range(0,len(curAds)):
@@ -492,7 +463,7 @@ while run:
                         print("Campaign Ended...");time.sleep(gameSpeed/2)
                     else:
                         tmpList[2] = days; curAds[ct] = tmpList
-                        print(str(tmpList[0])+": "+str(tmpList[2])+" days leftzz");time.sleep(gameSpeed/2)
+                        print(str(tmpList[0])+": "+str(tmpList[2])+" days left");time.sleep(gameSpeed/2)
             if len(loanList)>0:
                 for ct in range(0,len(loanList)):
                     tmpList=loanList[ct]
@@ -505,11 +476,13 @@ while run:
                     else:
                         tmpList[2] = days
                         money-=amount
-                        print('  loan payment  -$%.2f'%float(amount)) 
                         print('Loan $%.2f'%float(tmpList[0])+'  - '+str(days)+' days left')
-            print("Money: $%.2f"%float(money))
+                        print('  loan payment  -$%.2f'%float(amount)+'\n')
+            print("\nMoney: $%.2f"%float(money))
+            print('Profit: $%.2f'%float(profit))
+            print('Customer Count: '+str(count))
             lemon=math.floor(lemon)
-            print('Lemons: '+str(lemon))
+            print('\nLemons: '+str(lemon))
             print('Sugar: '+str(sugar)+' oz')
             print('ice: '+str(ice)+' cubes')
             print('cups: '+str(cups))
@@ -857,14 +830,18 @@ while run:
             weather = getWeather()
         elif option == '7':
             print('\n'+'-'*30);print('Settings\n'+'-'*30)
-            print('1. Lemonade Price')
-            print('2. Game Speed')
-            print('3. Report Delay')
-            print('4. Store Open Hour')
-            print('5. Store Closing Hour')
-            print('6. Take Out A Loan')
-            print('7. Back')
-            menuList = ['1','2','3','4','5','6','7']
+            print('1. Lemonade Price: $%.2f'%float(price))
+            print('2. Game Speed: %.2f'%float(gameSpeed))
+            print('3. Report Delay: '+str(reportDelay))
+            print('4. Store Open Hour: '+str(openHour))
+            print('5. Store Closing Hour: '+str(closeHour))
+            if printSales=='t':
+                print('6. Display Sales: TRUE')
+            else:
+                print('6. Display Sales: FALSE')
+            print('7. Take Out A Loan')
+            print('8. Back')
+            menuList = ['1','2','3','4','5','6','7','8']
             option = input("Select Option: ");time.sleep(gameSpeed)
             while option not in menuList:
                 print("ERROR: option must be a number...")
@@ -912,6 +889,32 @@ while run:
                 closeHour = int(tmp)
                 print('Closing Hour set to: '+str(closeHour));time.sleep(gameSpeed)
             elif option == '6':
+                if printSales=='t':
+                    print('Display Sales set to TRUE')
+                else:
+                    print('Display Sales set to FALSE')
+                tmp='';choiceList=['y','n']
+                print('If display sale is enabled every time you make a sale it will be displayed.')
+                if printSales=='t':
+                    tmp = input('Would you like to set Display Sales to FALSE? [y/n]: ');time.sleep(gameSpeed)
+                else:
+                    tmp = input('Would you like to set Display Sales to TRUE? [y/n]: ');time.sleep(gameSpeed)
+                while tmp not in choiceList:
+                    print("ERROR: option must be 'y' or 'n'")
+                    if printSales=='t':
+                        tmp = input('Would you like to set Display Sales to FALSE? [y/n]: ');time.sleep(gameSpeed)
+                    else:
+                        tmp = input('Would you like to set Display Sales to TRUE? [y/n]: ');time.sleep(gameSpeed)
+                if tmp == 'y':
+                    if printSales=='t':
+                        printSales='f'
+                        print('Display Sales set to FALSE')
+                    else:
+                        printSales='t'
+                        print('Display Sales set to TRUE')
+                elif tmp =='n':
+                    print('Display Sales not changed...')
+            elif option == '7':
                 loanAmount = input("Requesting a bank loan at: $")
                 checking=True
                 while checking:
@@ -950,7 +953,7 @@ while run:
                     loanList.append([str(loanAmount),str(payEachDay),str(daysToPay)])
                     money+=gift
                     print('Loan Accepted')
-            elif option == '7':
+            elif option == '8':
                 continue
         elif option == '8':
             saveGame();time.sleep(gameSpeed)
